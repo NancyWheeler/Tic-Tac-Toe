@@ -53,12 +53,37 @@ p {
 
 .score {
     margin-top: 3vh;
-    width: clamp(200px, 2vw, 18%);
+    width: clamp(320px, 3vw, 20%);
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
     font-size: clamp(16px, 2vh, 3vh);
     display: flex;
+}
+
+.name {
+    border-radius: 15px;
+    padding: 0px 5px 0px 5px;
+    cursor: pointer;
+    transition: 0.25s background-color;
+    overflow: hidden;
+    max-width: 100px;
+}
+
+.name:first-child {
+    margin-right: 20px;
+}
+
+.name:last-child {
+    margin-left: 20px;
+}
+
+.name:hover {
+    background-color: rgb(255, 252, 239);
+}
+
+.name:active {
+    background-color: rgb(255, 243, 188);
 }
 
 span {
@@ -102,4 +127,17 @@ span {
 .reset:active {
     background-color: rgb(70, 62, 63);
     color: white;
+}
+
+.info {
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: 450;
+    margin-top: 3vh;
+    letter-spacing: 0.1vw;
+    text-align: center;
+}
+
+.info ul {
+    list-style: none;
 }

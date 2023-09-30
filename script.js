@@ -1,9 +1,12 @@
-const player = (value) => {
+const player = (value, username) => {
     this.value = value;
+    this.username = username;
 
     const getValue = () => { return value };
+    const getUsername = () => { return username };
+    const setUsername = (name) => { username = name; };
     
-    return { getValue };
+    return { getValue, getUsername, setUsername };
 };
 
 const gameBoard = (() => {
@@ -26,13 +29,22 @@ const displayController = (() => {
     const resetBtn = document.querySelector('.reset');
     const p1Score = document.querySelector('.x');
     const p2Score = document.querySelector('.o');
+    const names = document.querySelectorAll('.name');
 
     tiles.forEach((tile) => 
-        tile.addEventListener('click', (e) => {
+        tile.addEventListener("click", (e) => {
             if (gameController.over() || e.target.textContent !== "") return;
             gameController.playRound(parseInt(e.target.id));
-            console.log(parseInt(e.target.id));
             updateGameboard();
+        })
+    );
+
+    names.forEach((name) => 
+        name.addEventListener("click", (e) => {
+            username = prompt("Enter name: ");
+            if (e.target.textContent === "X") gameController.player1.setUsername(username);
+            else gameController.player2.setUsername(username);
+            e.target.textContent = `${username} (${e.target.textContent})`;
         })
     );
 
@@ -40,7 +52,7 @@ const displayController = (() => {
         gameBoard.reset();
         gameController.reset();
         updateGameboard();
-        displayMessage("Player X's turn");
+        displayMessage(`Player ${gameController.player1.getUsername()}'s turn`);
     });
 
     const updateGameboard = () => {
@@ -62,18 +74,18 @@ const displayController = (() => {
 })();
 
 const gameController = (() => {
-    const player1 = player("X");
-    const player2 = player("O");
+    const player1 = player("X", "X");
+    const player2 = player("O", "O");
     let round = 1;
     let score = [0, 0];
     let end = false;
 
     const playRound = (index) => {
-        gameBoard.setValue(index, currentPlayer());
+        gameBoard.setValue(index, currentPlayer().getValue());
         if (checkWin(index)) {
-            displayController.displayMessage(`Player ${currentPlayer()} wins!`);
+            displayController.displayMessage(`${currentPlayer().getUsername()} wins!`);
             end = true;
-            if (currentPlayer() === "X") score[0]++; 
+            if (currentPlayer().getValue() === "X") score[0]++; 
             else score[1]++;
             displayController.updateScore(score[0], score[1]);
             return;
@@ -83,12 +95,12 @@ const gameController = (() => {
             return;
         } else {
             round++;
-            displayController.displayMessage(`Player ${currentPlayer()}'s turn`);
+            displayController.displayMessage(`Player ${currentPlayer().getUsername()}'s turn`);
         }
     };
 
     const currentPlayer = () => {
-        return round % 2 === 1 ? player1.getValue() : player2.getValue();
+        return round % 2 === 1 ? player1 : player2;
     };
 
     const checkWin = (index) => {
@@ -107,7 +119,7 @@ const gameController = (() => {
             .filter((combination) => combination.includes(index))
             .some((possibleCombination) =>
                 possibleCombination.every(
-                    (index) => gameBoard.getValue(index) === currentPlayer()
+                    (index) => gameBoard.getValue(index) === currentPlayer().getValue()
                 )
         );
     };
@@ -121,5 +133,5 @@ const gameController = (() => {
         end = false;
     };
 
-    return { playRound, over, reset, score };
+    return { playRound, over, reset, score, player1, player2};
 })();
