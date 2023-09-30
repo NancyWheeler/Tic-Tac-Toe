@@ -42,9 +42,14 @@ const displayController = (() => {
     names.forEach((name) => 
         name.addEventListener("click", (e) => {
             username = prompt("Enter name: ");
-            if (e.target.textContent === "X") gameController.player1.setUsername(username);
-            else gameController.player2.setUsername(username);
-            e.target.textContent = `${username} (${e.target.textContent})`;
+            if (e.target.id === "x") {
+                gameController.player1.setUsername(username);
+                e.target.textContent = `${username} (X)`;
+            }
+            else {
+                gameController.player2.setUsername(username);
+                e.target.textContent = `${username} (O)`;
+            }
         })
     );
 
