@@ -45,10 +45,12 @@ const displayController = (() => {
             if (e.target.id === "x") {
                 gameController.player1.setUsername(username);
                 e.target.textContent = `${username} (X)`;
+                displayMessage(`${gameController.currentPlayer().getUsername()}'s turn`);
             }
             else {
                 gameController.player2.setUsername(username);
                 e.target.textContent = `${username} (O)`;
+                displayMessage(`${gameController.currentPlayer().getUsername()}'s turn`);
             }
         })
     );
@@ -57,7 +59,7 @@ const displayController = (() => {
         gameBoard.reset();
         gameController.reset();
         updateGameboard();
-        displayMessage(`Player ${gameController.player1.getUsername()}'s turn`);
+        displayMessage(`${gameController.player1.getUsername()}'s turn`);
     });
 
     const updateGameboard = () => {
@@ -100,7 +102,7 @@ const gameController = (() => {
             return;
         } else {
             round++;
-            displayController.displayMessage(`Player ${currentPlayer().getUsername()}'s turn`);
+            displayController.displayMessage(`${currentPlayer().getUsername()}'s turn`);
         }
     };
 
@@ -138,5 +140,9 @@ const gameController = (() => {
         end = false;
     };
 
-    return { playRound, over, reset, score, player1, player2};
+    return { playRound, over, reset, player1, player2, currentPlayer};
 })();
+
+window.onload = () => {
+    displayController.displayMessage(`${gameController.currentPlayer().getUsername()}'s turn`);
+};
